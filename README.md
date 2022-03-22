@@ -1,6 +1,7 @@
-# 畢業project之Impossible
-## 不要把資料或檔案丟在這裡
-### 請將不同主題的檔案分別放在不同的分支下 <br> 
-  Ex. 圖像辨識放openpose的分支 <br>
+# Impossible中的image recognition
+## 請把image recognition的資料或檔案丟在這裡
 
-20200323 01:43地震好大喔喔喔喔
+### 網站資料
+#### openpose 相關資源
+1. https://github.com/felixchenfy/Realtime-Action-Recognition
+2. https://buzzorange.com/techorange/2019/08/09/action-recognition-and-turn-off-the-lamp/
