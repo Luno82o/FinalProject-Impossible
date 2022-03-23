@@ -16,10 +16,16 @@
 　[github](https://github.com/burningion/dab-and-tpose-controlled-lights)
 <br>
 <<<<<<< HEAD
+<<<<<<< HEAD
 ### 2. tf-pose-estimation: 是一套使用cmu架構訓練，以可以實時運行、可以在低電量嵌入式系統運行為特色的人體姿態估測工具 <br> 
 　github: https://github.com/ZheC/tf-pose-estimation <br>
 　reference: https://ithelp.ithome.com.tw/articles/10234772 <br>
 =======
+=======
+### 2. tf-pose-estimation: 是一套使用cmu架構訓練，以可以實時運行、可以在低電量嵌入式系統運行為特色的人體姿態估測工具<br> 
+	github: https://github.com/ZheC/tf-pose-estimation<br>
+	reference: https://ithelp.ithome.com.tw/articles/10234772<br>
+>>>>>>> parent of 32a8624 (test)
 <br>
 #### 2. tf-pose-estimation: 是一套使用cmu架構訓練，以可以實時運行、可以在低電量嵌入式系統運行為特色的人體姿態估測工具<br> 
 	github: https://github.com/ZheC/tf-pose-estimation<br>
