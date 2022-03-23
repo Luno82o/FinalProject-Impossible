@@ -1,12 +1,12 @@
 # Impossible中的image recognition
 請把image recognition的資料或檔案丟在這裡<br>
 <br>
-## 一、目前遇到的問題/困難
+### 一、目前遇到的問題/困難
 找不到openpose的輸出格式，網站上是說可以輸出成npy檔，<br>
 可是原始github的網站顯示error404
 
-## 二、網站資料
-### 1. openpose
+### 二、網站資料
+#### 1. openpose
 1-1. 多人實時動作監控<br>
 　https://github.com/felixchenfy/Realtime-Action-Recognition<br>
 <br>
@@ -15,9 +15,16 @@
 　<br>
 　[github](https://github.com/burningion/dab-and-tpose-controlled-lights)
 <br>
+<<<<<<< HEAD
 ### 2. tf-pose-estimation: 是一套使用cmu架構訓練，以可以實時運行、可以在低電量嵌入式系統運行為特色的人體姿態估測工具 <br> 
 　github: https://github.com/ZheC/tf-pose-estimation <br>
 　reference: https://ithelp.ithome.com.tw/articles/10234772 <br>
+=======
 <br>
-### 3. 行為辨識系統 MMSkeleton<br>
+#### 2. tf-pose-estimation: 是一套使用cmu架構訓練，以可以實時運行、可以在低電量嵌入式系統運行為特色的人體姿態估測工具<br> 
+	github: https://github.com/ZheC/tf-pose-estimation<br>
+	reference: https://ithelp.ithome.com.tw/articles/10234772<br>
+>>>>>>> parent of b35e463 (up)
+<br>
+#### 3. 行為辨識系統 MMSkeleton<br>
 	
