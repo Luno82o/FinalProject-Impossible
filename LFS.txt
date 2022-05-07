@@ -1,0 +1,34 @@
+git lfs教學(對付大型檔案)
+--------------------
+
+-------------------
+#要上傳的檔案類型
+
+git lfs track "*"
+
+-------------------
+#增加追蹤
+
+git add .gitattributes
+
+-------------------
+#commit紀錄文字
+
+git commit -m "輸入要記錄的文字"
+
+-------------------
+#看狀態
+
+git status
+
+------------------
+#看remote的所有列出
+
+git remote
+
+------------------
+#push
+
+git push -u origin 分支名稱
+
+ex:git push -u origin image-recognition
