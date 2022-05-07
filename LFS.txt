@@ -36,3 +36,8 @@ git remote
 git push -u origin 分支名稱
 
 ex:git push -u origin image-recognition
+
+-------------------
+#還原原有檔案
+
+git lfs fetch origin && git lfs checkou
