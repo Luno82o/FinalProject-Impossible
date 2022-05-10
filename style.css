@@ -1,0 +1,44 @@
+body{margin:0px;}
+
+nav{
+    display: flex;
+}
+
+nav>.logo{
+    flex:auto;
+    background-color: #ffcccc;
+}
+nav>.menu{
+    flex:auto;
+    background-color: #ccccff;
+}
+
+nav>.user{
+    flex:auto;
+    background-color: #ccffcc;
+}
+
+main{
+    display: flex;flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #cccccc;
+}
+
+main>.item{
+    flex:none;
+    width:270px;margin:10px;
+    background-color: #ffcccc;
+}
+
+@media (max-width:1200px) {
+    main>.item{
+        width: 45%;
+    }
+}
+
+@media (max-width:500px) {
+    main>.item{
+        width: 90%;
+    }
+}
