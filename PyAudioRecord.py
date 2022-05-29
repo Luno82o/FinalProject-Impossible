@@ -19,7 +19,7 @@ while record == 'Y' :
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
-    RECORD_SECONDS = 4
+    RECORD_SECONDS = 3
     
     
     localtime = time.localtime()

@@ -28,7 +28,7 @@ while record == 'Y' :
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
-    RECORD_SECONDS = 4
+    RECORD_SECONDS = 3
     
     
     localtime = time.localtime()
@@ -70,8 +70,11 @@ while record == 'Y' :
     prediction = np.argmax(model.predict(data), axis=-1)
     print(prediction)
     if(prediction == 0):
-        print("someone is screaming!")
-    else:
         print("safe")
+    if(prediction == 1):
+        print("someone is screaming!")
+    if(prediction == 2):
+        print("someone needs help!")
+        
     print("record?(Y/N):")
     record = input()
