@@ -1,25 +1,25 @@
-import os
+#import os
 import keras
 from keras.layers import Activation, Dense, Dropout, Conv2D, Flatten, MaxPooling2D
 from keras.models import Sequential
-from scipy.io import wavfile as wav
+#from scipy.io import wavfile as wav
 import librosa
 import librosa.display
 import numpy as np
 import pandas as pd
-import random
-import struct
-import matplotlib.pyplot as plt
-import IPython.display as ipd
-import progressbar
-import time
+#import random
+#import struct
+#import matplotlib.pyplot as plt
+#import IPython.display as ipd
+#import progressbar
+#import time
 
 data = pd.read_csv('metadata/Screamsound.csv')
 valid_data = data[['slice_file_name', 'fold' ,'classID', 'class']][ data['end']-data['start'] > 0 ]
 valid_data['path'] = 'fold' + valid_data['fold'].astype('str') + '/' + valid_data['slice_file_name'].astype('str')
 
 
-from tqdm import tnrange, tqdm_notebook
+from tqdm import tqdm_notebook
 
 D=[]
         
@@ -43,7 +43,7 @@ dataset = D
 print('dataset:', len(dataset))
 
 
-from keras.utils import np_utils
+#from keras.utils import np_utils
 #from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
 

@@ -15,21 +15,23 @@ def load_data(path):
 # 載入模型
 model = load_model('ScreamDemo1.h5')
 
-print("start?(Y/N)")
-filename = PyAudioRecord.recordAudio()
-text = translate.Voice_To_Text_wav(filename)    #將音檔轉換成文字
-print(text)
-
-data = load_data(filename)                      #
-
-prediction = np.argmax(model.predict(data), axis=-1)
-
-print(prediction)
-if(prediction == 0):
-    print("someone is screaming!")
-else:
-    if(prediction == 1):
-        print("someone needs help!")
+begin = input("start?(Y/N)\n")
+if(begin == "Y"):
+    filename = PyAudioRecord.recordAudio()
+    text = translate.Voice_To_Text_wav(filename)    #將音檔轉換成文字
+    print(text)
+    
+    data = load_data(filename)                      #
+    
+    prediction = np.argmax(model.predict(data), axis=-1)
+    
+    print(prediction)
+    if(prediction == 0):
+        print("someone is screaming!")
     else:
-        print("nothing")
-        
+        if(prediction == 1):
+            print("someone needs help!")
+        else:
+            print("nothing")
+else:
+    print("bye~")
