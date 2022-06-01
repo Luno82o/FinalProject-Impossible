@@ -1,0 +1,7 @@
+keras
+librosa
+numpy
+pyaudio
+wave
+time
+speech_recognition
