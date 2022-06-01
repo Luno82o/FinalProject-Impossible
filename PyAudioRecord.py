@@ -52,3 +52,6 @@ def recordAudio(lable = "test"):
     wf.close()
     
     return WAVE_OUTPUT_FILENAME
+
+if __name__ == '__main__':
+    recordAudio()
