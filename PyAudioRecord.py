@@ -7,13 +7,9 @@ import pyaudio
 import wave
 import time
 
-print("record?(Y/N):")
-record = input()
-num = 0
+def recordAudio(lable = "test"):
 
-while record == 'Y' :
     #time.sleep(1)
-    num = num + 1
     
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
@@ -24,7 +20,7 @@ while record == 'Y' :
     
     localtime = time.localtime()
     result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
-    WAVE_OUTPUT_FILENAME = "helpC" + result + ".wav"
+    WAVE_OUTPUT_FILENAME = lable + result + ".wav"
     
     p = pyaudio.PyAudio()
     
@@ -55,5 +51,4 @@ while record == 'Y' :
     wf.writeframes(b''.join(frames))
     wf.close()
     
-    print("record?(Y/N):")
-    record = input()
+    return WAVE_OUTPUT_FILENAME
