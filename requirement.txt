@@ -1,19 +1,13 @@
-conda create --name py39 python=3.9
-
-//model
-pip install keras		(2.9.0)
-pip install tensorflow		(2.9.1)
-pip install scipy		(1.8.1)
-pip install librosa
-pip install pandas
-pip install matplotlib
-pip install tqdm
-pip install ipywidgets
-
-//realtimeTest_warning.py
-pip install C:\Users\USER\Downloads\PyAudio-0.2.11-cp39-cp39-win_amd64.whl
-(https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio)
-pip install SpeechRecognition
+keras
+tensorflow
+scipy
+librosa
+pandas
+matplotlib
+tqdm
+ipywidgets
+pyaudio
+SpeechRecognition
 
 
 
