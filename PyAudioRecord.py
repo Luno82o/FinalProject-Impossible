@@ -7,7 +7,7 @@ import pyaudio
 import wave
 import time
 
-def recordAudio(lable = "test"):
+def recordAudio(folder = "PyAudioOutput", lable = "test"):
 
     #time.sleep(1)
     
@@ -20,7 +20,7 @@ def recordAudio(lable = "test"):
     
     localtime = time.localtime()
     result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
-    WAVE_OUTPUT_FILENAME = lable + result + ".wav"
+    WAVE_OUTPUT_FILENAME = folder + "\\" + lable + result + ".wav"
     
     p = pyaudio.PyAudio()
     
