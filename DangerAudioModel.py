@@ -14,7 +14,7 @@ import pandas as pd
 #import progressbar
 #import time
 
-data = pd.read_csv('metadata/Screamsound.csv')
+data = pd.read_csv('metadata/audioDataset.csv')
 valid_data = data[['slice_file_name', 'fold' ,'classID', 'class']][ data['end']-data['start'] > 0 ]
 valid_data['path'] = 'fold' + valid_data['fold'].astype('str') + '/' + valid_data['slice_file_name'].astype('str')
 
@@ -120,6 +120,6 @@ predict = np.argmax(model.predict(X_test), axis=-1)
 print(y_test)
 print(predict)
 
-model.save('ScreamDemo1.h5') 
+model.save('DangerAudioModel.h5') 
 print('Model exported and finished')
 

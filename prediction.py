@@ -3,9 +3,9 @@ import librosa
 import numpy as np
 
 
-def audioPridict(filename):
+def getPridict(filename):
     # 載入模型
-    model = load_model('audioWarningModel.h5')
+    model = load_model('DangerAudioModel.h5')
     
     y1, sr1 = librosa.load(filename, duration=2.97)  
     ps = librosa.feature.melspectrogram(y=y1, sr=sr1)
