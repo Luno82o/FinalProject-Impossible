@@ -34,6 +34,7 @@ def Voice_To_Text():
         print("請開始說話:")
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
+        print("轉換中......")
     try:
         Text = r.recognize_google(audio, language="zh-TW")
     except:
