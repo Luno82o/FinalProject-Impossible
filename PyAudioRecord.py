@@ -7,16 +7,21 @@ import pyaudio
 import wave
 import time
 
-def recordAudio(folder = "PyAudioOutput", lable = "test"):
+import argparse
 
-    #time.sleep(1)
+def parse_args():
+    parser = argparse.ArgumentParser() 
+    parser.add_argument('--folder', '-f', default='PyAudioOutput', type=str, required=False,  help='patn for wav')
+    parser.add_argument('--lable', '-l', default='test', type=str, required=False,  help='lable for wav')
+    return parser.parse_args()
+
+def recordAudio(folder, lable):
     
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 2
     RATE = 44100
     RECORD_SECONDS = 3
-    
     
     localtime = time.localtime()
     result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
@@ -53,5 +58,13 @@ def recordAudio(folder = "PyAudioOutput", lable = "test"):
     
     return WAVE_OUTPUT_FILENAME
 
+
+
 if __name__ == '__main__':
-    recordAudio()
+    args = parse_args()
+    value = input("record?(Y/N)\n")
+    while (value == 'Y'):
+        path = recordAudio(args.folder, args.lable)
+        print(path)
+        value = input("record?(Y/N)")
+    
