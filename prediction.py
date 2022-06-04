@@ -4,12 +4,13 @@ import numpy as np
 
 
 def getPridict(filename):
-    # 載入模型
     model = load_model('DangerAudioModel.h5')
-    
+    data = getFeature_Mel(filename)
+    prediction = np.argmax(model.predict(data), axis=-1)
+    return prediction
+
+def getFeature_Mel(filename):
     y1, sr1 = librosa.load(filename, duration=2.97)  
     ps = librosa.feature.melspectrogram(y=y1, sr=sr1)
     data = np.array([ps.reshape( (128, 128, 1) )])
-    
-    prediction = np.argmax(model.predict(data), axis=-1)
-    return(prediction)
+    return data
