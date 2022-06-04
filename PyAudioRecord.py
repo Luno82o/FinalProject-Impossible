@@ -15,7 +15,7 @@ def parse_args():
     parser.add_argument('--lable', '-l', default='test', type=str, required=False,  help='lable for wav')
     return parser.parse_args()
 
-def recordAudio(folder, lable):
+def recordAudio(folder='PyAudioOutput', lable='test'):
     
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
@@ -55,7 +55,7 @@ def recordAudio(folder, lable):
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
-    
+    print("save at", WAVE_OUTPUT_FILENAME)
     return WAVE_OUTPUT_FILENAME
 
 
@@ -66,5 +66,5 @@ if __name__ == '__main__':
     while (value == 'Y'):
         path = recordAudio(args.folder, args.lable)
         print(path)
-        value = input("record?(Y/N)")
+        value = input("record?(Y/N)\n")
     

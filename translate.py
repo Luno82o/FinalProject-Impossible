@@ -13,11 +13,11 @@ def parse_args():
 
 # 將wav檔的聲音轉成文字的function
 def Voice_To_Text_wav(WAVE_FILENAME):
-    print("讀取" + WAVE_FILENAME)
+    print("load data from" + WAVE_FILENAME)
     wavFile = speech_recognition.AudioFile(WAVE_FILENAME)
     r = speech_recognition.Recognizer()
     with wavFile as source: 
-        print("轉換中......")
+        print("translating......")
         r.adjust_for_ambient_noise(source)
         audio = r.record(source)
         #print(type (audio))
