@@ -4,7 +4,7 @@
 ## 一、目前遇到的問題/困難
 躺著資料辨識度極低，因為四肢很難被判斷
 
-## 二、網站資料
+## 二、目前架構
 ### 1. Tf-pose
 1-1. 多人實時動作監控<br>
 　https://github.com/felixchenfy/Realtime-Action-Recognition<br>
