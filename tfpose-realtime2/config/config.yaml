@@ -1,0 +1,63 @@
+
+#----------------------------
+#setting
+label: ['faint', 'surrender','walk']
+danger_label: ['faint','surrender']
+image_format: "{:06d}.jpg"
+skeleton_format: "{:06d}.txt"
+avi_format: "{:03d}.avi"
+window_size: 5 #number of get features img 
+
+#----------------------------
+#orign jpg path
+orign_path:
+    output: 
+        path: data/origin_img
+
+
+#----------------------------
+#s1
+s1_training_imgs:
+    openpose:
+        model: cmu  #'cmu' , 'mobilenet_thin'
+        img_size: 656x368  #'656x368', '432x368', '336x288'
+    input:
+        images_origin_txt: data/origin_img/origin.txt
+        images_folder: data/origin_img/
+    output:
+         images_information_txt: data/image_information.txt     
+         images_skeletons_eachTXT_folder: &skels_folder data/skeleton_txt/
+         images_skeleton_folders: data/skeleton_img/
+         all_skeletons_txt: &skels_txt data/skeletons_information.txt
+                      
+#----------------------------
+#s2
+s2_preprocess:
+    input:
+        all_skeletons_txt: *skels_txt
+    output:
+        skeletons_features: &skels_features train/skeletons_features.csv
+        skeletons_label: &skels_label train/skeletons_label.csv
+        
+#----------------------------
+#s3
+s3_train:
+    input:
+        skeletons_features: *skels_features
+        skeletons_label: *skels_label
+    output:
+        model_path: &model_path train/model.pickle
+
+#----------------------------
+#s4
+s4_real_time:
+    openpose:
+        model: mobilenet_thin  #'cmu' , 'mobilenet_thin'
+        img_size: 656x368  #'656x368', '432x368', '336x288'
+    input:
+        model_path: *model_path
+    output:
+        movie_path: output/
+        video_fps: 10.0
+        base_avi_name: result
+        resize_row: 480
