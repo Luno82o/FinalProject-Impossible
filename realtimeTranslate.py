@@ -2,7 +2,6 @@
 """
 https://towardsdatascience.com/real-time-speech-recognition-python-assemblyai-13d35eeed226
 """
-
 import json
 
 import base64
@@ -12,7 +11,7 @@ import websockets
 
 SAMPLE_RATE=16000
 FRAMES_PER_BUFFER = 3200
-API_KEY = '5bc6a811ae4a4814aa382e45c92e88ec'
+API_KEY = '4ef34ee4abd9488b9bf907f0bf983a6f'
 ASSEMBLYAI_ENDPOINT =  f'wss://api.assemblyai.com/v2/realtime/ws?sample_rate={SAMPLE_RATE}'
 
 
@@ -67,3 +66,6 @@ async def speech_to_text():
                     break
                     
         data_sent, data_received = await asyncio.gather(send_data(), receive_data())
+        
+        
+asyncio.run(speech_to_text())
