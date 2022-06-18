@@ -1,1 +1,4 @@
 SpeechRecognition
+playsound
+opencv-python
+pillow
