@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Jun 18 00:13:04 2022
-
-@author: USER
 """
 
 import cv2
 import threading
 import numpy as np
+import os
 from PIL import ImageFont, ImageDraw, Image    # 載入 PIL 相關函式庫
 
 import tmp
@@ -27,7 +26,6 @@ def videoCapture():
         if not ret:
             print("Can't receive frame (stream end?). Exiting ...")
             break
-        
         
         fontpath = 'textfount/NotoSansTC-Regular.otf'          # 設定字型路徑
         font = ImageFont.truetype(fontpath, 50)      # 設定字型與文字大小
@@ -53,28 +51,27 @@ def videoCapture():
 def recognition():
     while (True):
         audio = tmp.recordStatement()
-        query = tmp.recognizeCommand(audio)
         
         global text
-        text = query
+        text = tmp.recognizeCommand(audio)
         
-        print(f"{query}\n")
-        if(query == "離開"):
-            print("bye bye ~")
-            break
+        print(f"{text}\n")
+        
+        if "救命" in text:
+            print("有人呼救")
     return
 
 
 if __name__ == '__main__':
     
-    t1 = threading.Thread(target = recognition)
-    t2 = threading.Thread(target = videoCapture)
+    t1 = threading.Thread(target = videoCapture)
+    t2 = threading.Thread(target = recognition)
     
     t1.start()
     t2.start()
     
     t1.join()
-    t2.join()
+    os._exit(0)
 
     
     
