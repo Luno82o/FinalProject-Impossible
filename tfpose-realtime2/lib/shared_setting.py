@@ -130,7 +130,7 @@ class ImageDisplayer(object):
 #--------------------------------
 #Image Writer
 class ImageWriter(object):
-    def __init__(self,path,fps):        
+    def __init__(self,path,fps=10):        
         self.path=path
         self.fps=fps
         

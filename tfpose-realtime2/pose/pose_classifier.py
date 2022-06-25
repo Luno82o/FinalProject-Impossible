@@ -55,6 +55,7 @@ class labelTrain(object):
         
         #get model
         self.model.fit(n_features, label)
+    
                
     def predict(self, t_features, t_label):
         t_label_predict=self.model.predict(self.pca.transform(t_features))

@@ -56,8 +56,11 @@ s4_real_time:
         img_size: 656x368  #'656x368', '432x368', '336x288'
     input:
         model_path: *model_path
+        sound_model_path: train/danger_audio_model.h5
+        danger_dict_path: data/dangerword.txt
     output:
         movie_path: output/
+        sound_path: output/sound/
         video_fps: 10.0
         base_avi_name: result
         resize_row: 480

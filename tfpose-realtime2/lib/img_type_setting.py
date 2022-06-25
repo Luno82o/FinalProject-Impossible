@@ -15,6 +15,8 @@ class videoType(object):
         self.pathErr()
         
         self.cap = cv2.VideoCapture(path)
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+        
         ret, self.image = self.cap.read()
        
     def pathErr(self):
@@ -32,7 +34,10 @@ class videoType(object):
             ret, self.image = self.cap.read()
             
         return image
-            
+
+    def FPS(self):
+        return self.fps
+       
     def stop(self):
         self.cap.release()
         
@@ -76,7 +81,10 @@ class imageType(object):
         img=cv2.imread(self.img_path[self.now_img])
         self.now_img+=1
         return img
-        
+    
+    def FPS(self):
+        return 10.0    
+    
     def stop(self):
         None
 
@@ -90,6 +98,7 @@ class webcamType(object):
     def __init__(self):
         
         self.cap = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         
         #multi-thread and multi-process
         self.img_queue=queue.Queue(maxsize=3)
@@ -112,6 +121,11 @@ class webcamType(object):
     def read_img(self):       
         img= self.img_queue.get()
         return img
+    
+    def FPS(self):
+        print("FPS")
+        print(self.fps)
+        return 30
     
     def stop(self):
         self.survive.value = False

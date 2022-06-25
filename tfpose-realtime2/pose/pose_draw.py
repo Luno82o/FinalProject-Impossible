@@ -3,6 +3,9 @@ import math
 import os
 import sys
 import numpy as np
+from sklearn.metrics import confusion_matrix
+from sklearn.utils.multiclass import unique_labels
+import matplotlib.pyplot as plt
 
 #--------------------------------------------------------
 #set path
@@ -12,6 +15,58 @@ sys.path.append(ROOT)
 #--------------------------------
 #import lib
 import lib.shared_setting as shared_setting
+
+
+#---------------------------
+#draw 混淆矩陣
+def draw_confusion(te_label,test_pred,label,normalize=False,title=None,cmap=plt.cm.Greens,size=(12, 8)):
+    
+    plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei'] 
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    if not title:
+        if normalize:
+            title = '標準化混淆矩陣'
+        else:
+            title = '未標準化混淆矩陣'
+    con_matrix= confusion_matrix(te_label,test_pred)
+    
+    label=label[unique_labels(te_label, test_pred)] #提取不同數組label
+    
+    #print("---------------------------------")
+    #print("[混淆矩陣格式]")
+    if normalize:
+        con_matrix=con_matrix.astype('float')/con_matrix.sum(axis=1)[:,np.newaxis]
+        print("   |標準化")
+    else:
+        print("   |未標準化")
+        
+    fig, ax = plt.subplots()
+    fig.set_size_inches(size[0], size[1])
+    
+    im = ax.imshow(con_matrix, interpolation='nearest', cmap=cmap)
+    ax.figure.colorbar(im, ax=ax)
+    
+    ax.set(xticks=np.arange(con_matrix.shape[1]),
+           yticks=np.arange(con_matrix.shape[0]),
+           xticklabels=label, yticklabels=label,
+           title=title,
+           ylabel='真實標籤',
+           xlabel='預測標籤')
+    ax.set_ylim([-0.5, len(label)-0.5])
+    
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+    
+    fmt = '.2f' if normalize else 'd'
+    thresh = con_matrix.max() / 2.
+    for i in range(con_matrix.shape[0]):
+        for j in range(con_matrix.shape[1]):
+            ax.text(j, i, format(con_matrix[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if con_matrix[i, j] > thresh else "black")
+    fig.tight_layout()
+    return ax, con_matrix
 
 #---------------------------
 #draw cv2 by 關鍵範圍+label

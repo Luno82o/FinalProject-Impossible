@@ -2,7 +2,9 @@ import sys
 import os
 import argparse
 import cv2
-
+import threading
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 #--------------------------------------------------------
 #set path
 ROOT = os.path.dirname(os.path.abspath(__file__))+"/../"
@@ -13,10 +15,14 @@ sys.path.append(ROOT)
 import lib.shared_setting as shared_setting
 import lib.img_type_setting as img_type_setting
 import pose.pose_draw as pose_draw
+import voice.voice_speech_recognition as voice_speech_recognition
+import voice.voice_sound_detecte as voice_sound_detecte
+import voice.voice_sound_prediction as voice_sound_prediction
 
 from pose.pose_openpose import SkeletonDetector
 from pose.pose_tracker import Tracker
 from pose.pose_classifier import label_Live_Train
+
 
 #--------------------------------
 #choose type
@@ -45,6 +51,8 @@ OPENPOSE_IMG_SIZE =CONFIG_S4["openpose"]["img_size"]
 
 #input model path
 MODEL_PATH = shared_setting.configPath(CONFIG_S4["input"]["model_path"])
+SOUND_MODEL_PATH=shared_setting.configPath(CONFIG_S4["input"]["sound_model_path"])
+DANGER_DICT_PATH=shared_setting.configPath(CONFIG_S4["input"]["danger_dict_path"])
 
 #args
 args=choose_type()
@@ -53,12 +61,16 @@ INPUTPATH=args.input
 
 #output pqth
 MOVIE_PATH = shared_setting.configPath(CONFIG_S4["output"]["movie_path"])
+SOUND_PATH = shared_setting.configPath(CONFIG_S4["output"]["sound_path"])
 VIDEO_FPS = float(CONFIG_S4["output"]["video_fps"])
 AVI_NAME = CONFIG_S4["output"]["base_avi_name"]
 RESIZE_ROW = CONFIG_S4["output"]["resize_row"]
 
 #public argument
 label=None
+speech_text="not speech"
+pre_speech_text=None
+is_sound_danger=False
 
 #--------------------------------
 #loaf type
@@ -115,14 +127,31 @@ def draw_img(img,humans,muti_skeleton_id,skeleton_detector,labels,scale_h,multip
             pose_draw.draw_rect_label(new_img,id,skeleton,label)
         
     #繪製score area
+    '''
     new_img=pose_draw.score_area(new_img)
     
     if len(muti_skeleton_id):
         #label score list
         m_label = multiple_label.get_classify('min')
         m_label.draw_score(new_img)
+    '''
     
+    #語音轉文字
+    fontpath = ROOT +'lib/textfount/NotoSansTC-Regular.otf'
+    font = ImageFont.truetype(fontpath, 25)
+    imgPil = Image.fromarray(new_img)
+    draw = ImageDraw.Draw(imgPil)
     
+    if voice_speech_recognition.is_danger_text(DANGER_DICT_PATH,speech_text):
+        draw.text((10, 50), "警告："+speech_text, fill=(0, 0, 255), font=font)
+    else:
+        draw.text((10, 50), speech_text, fill=(0, 255, 0), font=font)
+   
+    
+    if is_sound_danger:
+        draw.text((10, 80), "警告：尖叫聲", fill=(0, 0, 255), font=font)
+    
+    new_img = np.array(imgPil)
     return new_img
     
     
@@ -178,7 +207,7 @@ def get_skeleton():
     
     #writer video
     avi_path=shared_setting.set_avi(MOVIE_PATH,TYPE,AVI_NAME+AVI_FORMAT)
-    video_writer=shared_setting.ImageWriter(avi_path,VIDEO_FPS)
+    video_writer=shared_setting.ImageWriter(avi_path,img_type.FPS())
     
     #read img
     while img_type.has_img():
@@ -215,9 +244,53 @@ def get_skeleton():
         #display and write
         displayer.display(new_img)
         video_writer.write(new_img)
+        
+#--------------------------------
+#voice
+def voice_speech(filename):
+    global speech_text,pre_speech_text
+    pre_speech_text=speech_text
+    
+    audio,speech_text=voice_speech_recognition.recognition(filename)
+        
+    if(speech_text=="None"):
+        speech_text=pre_speech_text
+    else:
+        pre_speech_text=speech_text
+    print("===>語音辨識："+speech_text)
+
+    
+def voice_sound(filename):
+    global is_sound_danger
+    sound_predictions = voice_sound_prediction.getPridict(filename,SOUND_MODEL_PATH)
+    is_sound_danger=voice_sound_prediction.is_danger_sound(sound_predictions)
+    print("===>尖叫聲音："+str(is_sound_danger))
+
+    
+        
+#--------------------------------
+#偵測 儲存聲音        
+def detectesound():
+    a = voice_sound_detecte.Recorder(SOUND_PATH)
+    while(True):  
+        filename = a.listen()
+        voice_speech(filename)  
+        voice_sound(filename)
     
 #--------------------------------
 #main
 if __name__ == "__main__":
-    get_skeleton()
+    
+    t1 = threading.Thread(target = detectesound)
+    t2 = threading.Thread(target = get_skeleton)
+    
+    t1.start()
+    t2.start()
+    
+    t2.join()
+    os._exit(0)
+
+    
+    
+    
     

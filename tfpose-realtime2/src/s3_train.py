@@ -1,8 +1,10 @@
 import sys
 import os
 import warnings
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+import matplotlib.pyplot as plt
 
 #--------------------------------------------------------
 #set path
@@ -13,6 +15,8 @@ sys.path.append(ROOT)
 #import /lib /pose
 import lib.shared_setting as shared_setting
 from pose.pose_classifier import labelTrain
+import pose.pose_draw as pose_draw
+
 
 #--------------------------------
 #setting
@@ -21,6 +25,7 @@ config_all = shared_setting.read_yaml(ROOT + "config/config.yaml")
 #constant
 CONFIG_S3 = config_all["s3_train"]
 LABEL = config_all["label"]
+LABEL_N = np.array(LABEL)
 
 #input csv data path
 SKELETONS_FEATURES =shared_setting.configPath(CONFIG_S3["input"]["skeletons_features"])
@@ -47,6 +52,13 @@ def predict(model,label,tr_Features,te_Features,tr_Label,te_Label):
     report=classification_report(te_Label, test_pred, target_names=label, output_dict=False)   
     print(report)
     
+    #plot
+    print("---------------------------------")
+    print("[混淆矩陣格式]")
+    axis, cf = pose_draw.draw_confusion(te_Label,test_pred,label,
+                           normalize=False,size=(4, 4))
+    
+    plt.show()
     
 #--------------------------------
 #train and predict model
@@ -72,7 +84,7 @@ def main():
     print("---------------------------------")
     print("[預測模型]")
     print("   |準確率")
-    predict(model,LABEL,train_Features,test_Features,train_Label,test_Label)
+    predict(model,LABEL_N,train_Features,test_Features,train_Label,test_Label)
     
     #save
     print("---------------------------------")
