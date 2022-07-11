@@ -116,8 +116,8 @@ def is_danger_label(label):
 #--------------------------------
 #Image Displayer    
 class ImageDisplayer(object):
-    def __init__(self):
-        self._window_name = "video displayer"
+    def __init__(self,num=1):
+        self._window_name = "video displayer"+str(num)
         cv2.namedWindow(self._window_name)
 
     def display(self, image, wait_key_ms=1):
@@ -125,7 +125,8 @@ class ImageDisplayer(object):
         cv2.waitKey(wait_key_ms)
 
     def __del__(self):
-        cv2.destroyWindow(self._window_name)
+        print("----暫停---------")
+        #cv2.destroyWindow(self._window_name)
         
 #--------------------------------
 #Image Writer
@@ -150,6 +151,6 @@ class ImageWriter(object):
             print("--------------------------")
             print("[已將照片寫入 /output]")
             print("   |FPS： {:>6} fps|".format(self.fps))
-            print("   |影片秒數： {:>4} s|".format(self.current_img/self.fps))
+            print("   |影片秒數： {:>.2f} s|".format(self.current_img/self.fps))
             
         

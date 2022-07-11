@@ -9,15 +9,15 @@ sys.path.append(ROOT)
 
 #--------------------------------------------------------
 #import /lib
-import lib.realtimeRecognizeGoogle as realtimeRecognizeGoogle
+import lib.realtime_recognize_google as realtime_recognize_google
 
 
 #--------------------------------------
 #speech recognition
 def recognition(filepath):
     
-    audio = realtimeRecognizeGoogle.recordStatementwav(filepath)
-    query = realtimeRecognizeGoogle.recognizeCommand(audio)
+    audio = realtime_recognize_google.recordStatementwav(filepath)
+    query = realtime_recognize_google.recognizeCommand(audio)
         
     return audio,query
 

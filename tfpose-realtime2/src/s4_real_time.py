@@ -4,6 +4,7 @@ import argparse
 import cv2
 import threading
 import numpy as np
+import time
 from PIL import ImageFont, ImageDraw, Image
 #--------------------------------------------------------
 #set path
@@ -62,6 +63,8 @@ INPUTPATH=args.input
 #output pqth
 MOVIE_PATH = shared_setting.configPath(CONFIG_S4["output"]["movie_path"])
 SOUND_PATH = shared_setting.configPath(CONFIG_S4["output"]["sound_path"])
+SOUND_PATH_TMP = shared_setting.configPath(CONFIG_S4["output"]["sound_path_tmp"])
+
 VIDEO_FPS = float(CONFIG_S4["output"]["video_fps"])
 AVI_NAME = CONFIG_S4["output"]["base_avi_name"]
 RESIZE_ROW = CONFIG_S4["output"]["resize_row"]
@@ -71,6 +74,7 @@ label=None
 speech_text="not speech"
 pre_speech_text=None
 is_sound_danger=False
+is_video_stop=False
 
 #--------------------------------
 #loaf type
@@ -194,6 +198,7 @@ class multi_label(object):
 #--------------------------------
 #get skeleton
 def get_skeleton():
+    global is_video_stop
     #Detector
     skeleton_detector = SkeletonDetector(OPENPOSE_MODEL, OPENPOSE_IMG_SIZE)
     tracker = Tracker()
@@ -219,6 +224,7 @@ def get_skeleton():
         #當按下enter結樹讀取照片
         if cv2.waitKey(1) == 13:
             img_type.stop()
+            is_video_stop=img_type.isStop
             break
         
         #skeletons
@@ -269,13 +275,57 @@ def voice_sound(filename):
     
         
 #--------------------------------
-#偵測 儲存聲音        
+#偵測 儲存聲音      
+a = voice_sound_detecte.Recorder(SOUND_PATH_TMP)
 def detectesound():
-    a = voice_sound_detecte.Recorder(SOUND_PATH)
-    while(True):  
-        filename = a.listen()
-        voice_speech(filename)  
-        voice_sound(filename)
+    a = voice_sound_detecte.Recorder(SOUND_PATH_TMP)
+    
+    time1 = a.getcurrenttime()
+    
+    rec_silence = []
+    while(True):
+        data = a.getsound()
+        if a.ifnoise(data):
+            if rec_silence != '':
+                file1 = a.write(b''.join(rec_silence),time1)
+            rec_silence = []
+            
+            rec_noise = []
+            rec_noise.append(data)
+        
+            time2 = a.getcurrenttime()
+            
+            current = time.time()
+            end = time.time() + 3
+            while(current <= end):
+                data = a.getsound()
+                if a.ifnoise(data):
+                    end = time.time() + 3
+                current = time.time()
+                rec_noise.append(data)
+                if(is_video_stop):
+                    file2 = a.write(b''.join(rec_noise),time2)
+                    
+                    #a.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+                    return
+            file2 = a.write(b''.join(rec_noise),time2)
+            #t1 = threading.Thread(target = voice_speech(file2))
+            #t2 = threading.Thread(target = voice_sound(file2))
+            voice_speech(file2)
+            voice_sound(file2)
+            time1 = a.getcurrenttime()
+            #t1.start()
+            #t2.start()
+            
+        else:
+            rec_silence.append(data)
+            if(is_video_stop):
+                file1 = a.write(b''.join(rec_silence),time1)
+                a.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+                return
+        
+    #a.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+
     
 #--------------------------------
 #main
@@ -284,11 +334,17 @@ if __name__ == "__main__":
     t1 = threading.Thread(target = detectesound)
     t2 = threading.Thread(target = get_skeleton)
     
-    t1.start()
     t2.start()
+    print("t1")
+    
+    t1.start()
+    print("t2")
     
     t2.join()
-    os._exit(0)
+    t1.join()
+    a.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+    
+    #os._exit(0)
 
     
     

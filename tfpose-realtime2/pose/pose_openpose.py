@@ -40,7 +40,7 @@ class SkeletonDetector(object):
         self._cnt_image = 0
         
         # -- Set logger
-        self._logger = _set_logger()
+        #self._logger = _set_logger()
         
     def detect(self, image):
         ''' Detect human skeleton from image.
@@ -73,7 +73,7 @@ class SkeletonDetector(object):
 
         # Print result and time cost
         elapsed = time.time() - t
-        self._logger.info('inference image in %.4f seconds.' % (elapsed))
+        #self._logger.info('inference image in %.4f seconds.' % (elapsed))
 
         return humans
     

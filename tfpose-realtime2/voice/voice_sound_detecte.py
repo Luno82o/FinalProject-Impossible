@@ -5,7 +5,12 @@ import wave
 import time
 import os
 
-Threshold = 10
+import glob
+import numpy as np
+import scipy.io.wavfile as wav
+
+
+Threshold = 20
 
 SHORT_NORMALIZE = (1.0/32768.0)
 chunk = 1024
@@ -57,13 +62,12 @@ class Recorder:
 
             current = time.time()
             rec.append(data)
-        filename = self.write(b''.join(rec),)
-        return filename
+        return rec
 
-    def write(self, recording):
-        n_files = len(os.listdir(self.filepath))
+    def write(self, recording, time):
+        #n_files = len(os.listdir(self.filepath))
 
-        filename = os.path.join(self.filepath, '{}.wav'.format(n_files))
+        filename = os.path.join(self.filepath, '{}.wav'.format(time))
 
         wf = wave.open(filename, 'wb')
         wf.setnchannels(CHANNELS)
@@ -71,7 +75,8 @@ class Recorder:
         wf.setframerate(RATE)
         wf.writeframes(recording)
         wf.close()
-        print('Written to file: {}'.format(filename))
+        print('[寫入聲音至/tmp]: {}'.format(filename))
+        print("",self.getcurrenttime())
         return filename
 
 
@@ -85,6 +90,70 @@ class Recorder:
                 break
         return filename
 
+    def recordnoise(self):
+        print('silence recording beginning')
+        rec = []
+        
+        localtime = time.localtime()
+        result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
+        
+        while(True):
+            data = self.stream.read(chunk)                      #收錄聲音
+            rms_val = self.rms(data)                            #計算音量
+            
+            if rms_val > Threshold:                             #判斷音量是否大於設定值
+                file = self.write(b''.join(rec),result)         #是，將安靜的聲音存檔
+                
+
+                localtime = time.localtime()
+                result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
+
+                rec = self.record()                             #錄製聲音
+                file = self.write(b''.join(rec),result)         #將聲音存檔
+                rec = []                                        #list初始化
+                break
+            else:
+                rec.append(data)
+        return file
+    
+    def merge_files(self, path_read_folder, path_write_wav_file):
+    
+        #files = os.listdir(path_read_folder)
+        merged_signal = []
+        i = 0
+        for filename in glob.glob(os.path.join(path_read_folder, '*.wav')):
+            if (i==0):
+                mergedfilename = filename
+                i = i+1
+            print("合併檔案：",filename)
+            sr, signal = wav.read(filename)
+            merged_signal.append(signal)
+        merged_signal = np.hstack(merged_signal)
+        merged_signal = np.asarray(merged_signal, dtype=np.int16)
+        
+        result = os.path.split(mergedfilename)[1]
+        path_write_wav_file = os.path.join(path_write_wav_file, '{}'.format(result))
+        print("合併後檔案位置： " + path_write_wav_file)
+        wav.write(path_write_wav_file, sr, merged_signal)
+        
+        for filename in glob.glob(os.path.join(path_read_folder, '*.wav')):
+            os.remove(filename)
+            
+    def getsound(self):
+        data = self.stream.read(chunk)
+        return data
+        
+    def ifnoise(self, data):
+        rms_val = self.rms(data)
+        if rms_val > Threshold:
+            return True
+        else:
+            return False
+        
+    def getcurrenttime(self):
+        localtime = time.localtime()
+        result = time.strftime("%y-%m-%d_%H-%M-%S", localtime)
+        return result
 
 
 if __name__ == '__main__':

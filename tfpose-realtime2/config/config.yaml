@@ -1,8 +1,8 @@
 
 #----------------------------
 #setting
-label: ['faint', 'surrender','walk']
-danger_label: ['faint','surrender']
+label: ['stand', 'surrender','walk','sit']
+danger_label: ['surrender']
 image_format: "{:06d}.jpg"
 skeleton_format: "{:06d}.txt"
 avi_format: "{:03d}.avi"
@@ -61,6 +61,7 @@ s4_real_time:
     output:
         movie_path: output/
         sound_path: output/sound/
+        sound_path_tmp: output/sound/tmp
         video_fps: 10.0
         base_avi_name: result
         resize_row: 480

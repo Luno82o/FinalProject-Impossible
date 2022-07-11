@@ -1,43 +1,42 @@
-#!/usr/bin/env python
-#! --*-- coding:utf-8 --*--
-import cv2
+# 引入 time 模組
 import time
- 
-if __name__ == '__main__' :
-    # 启动默认相机
-    video = cv2.VideoCapture(0);
-     
-    # 获取 OpenCV version
-    (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+import os
+import copy
+# 現在時間
+now = time.ctime()
+
+# 輸出結果
+print("現在時間：", now)
+#time.sleep(2)
+now = time.ctime()
+print("現在時間：", now)
+
+#list
+
+
+dict3={"id":[4,5]}
+if 6 not in dict3.get("id"):
+    dict3["id"].append(6)
+print(dict3)
+
+list1={3:"test"}
+list4={1:"dict1",3:"tset2"}
+d1=set(list4).difference(set(list1.keys()))
+[list4.pop(key) for key in d1] 
+print(list4)
+
+os.system('')
+a="hello"
+print("      |#{}預測結果為： {:>12}|".format((10),"\033[31m"+a+"\033[37m"))
+
+dict5={1:{"cur":"walk","walk":2},5:{"cur":"ss","abc":3}}
+
+#[dict5[key].pop(a) for key in dict5.keys() for a in dict5[key].keys()] 
+
+
+for key in dict5.keys():
+    [dict5[key].pop(a) for a in copy.deepcopy(dict5)[key].keys() if a!="cur"]
     
-    # 对于 webcam 不能采用 get(CV_CAP_PROP_FPS) 方法 
-    # 而是：
-    if int(major_ver)  < 3 :
-        fps = video.get(cv2.cv.CV_CAP_PROP_FPS)
-        print("Frames per second using video.get(cv2.cv.CV_CAP_PROP_FPS): {0}".format(fps))
-    else :
-        fps = video.get(cv2.CAP_PROP_FPS)
-        print("Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps))
-     
-    # Number of frames to capture
-    num_frames = 120;
-    print("Capturing {0} frames".format(num_frames))
- 
-    # Start time
-    start = time.time()
-    # Grab a few frames
-    for i in range(0, num_frames):
-        ret, frame = video.read()
-    # End time
-    end = time.time()
- 
-    # Time elapsed
-    seconds = end - start
-    print("Time taken : {0} seconds".format(seconds))
- 
-    # 计算FPS，alculate frames per second
-    fps  = num_frames / seconds;
-    print("Estimated frames per second : {0}".format(fps))
- 
-    # 释放 video
-    video.release()
+print(dict5)
+
+
