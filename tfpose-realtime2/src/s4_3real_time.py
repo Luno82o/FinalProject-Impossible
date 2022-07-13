@@ -19,9 +19,9 @@ os.system('')
 import lib.shared_setting as shared_setting
 import lib.img_type_setting as img_type_setting
 import pose.pose_draw as pose_draw
-import voice.voice_speech_recognition as voice_speech_recognition
-import voice.voice_sound_detecte as voice_sound_detecte
-import voice.voice_sound_prediction as voice_sound_prediction
+import voice.voice_speech as voice_speech
+import voice.voice_sound as voice_sound
+#import voice.voice_sound_prediction as voice_sound_prediction
 
 from pose.pose_openpose import SkeletonDetector
 from pose.pose_tracker import Tracker
@@ -388,12 +388,12 @@ def recording_danger():
         video_writer.write(new_img)
 
 #--------------------------------
-#voice       
-def voice_speech(filename):
+#voice(語音辨識)
+def voicespeech(filename):
     global speech_text,pre_speech_text
     pre_speech_text=speech_text
     
-    audio,speech_text = voice_speech_recognition.recognition(filename)
+    audio,speech_text = voice_speech.recognition(filename)
         
     if(speech_text=="None"):
         speech_text=pre_speech_text
@@ -401,24 +401,93 @@ def voice_speech(filename):
         pre_speech_text=speech_text
     print("===>語音辨識："+speech_text)
     
-    
-def voice_sound(filename):
+#voice(聲音辨識)
+def voicesound(filename):
     global is_sound_danger
     
-    filelist = voice_sound_data.cutwav(filename)
+    filelist = voice_sound.cutwav(filename)
     for file in filelist:
         print(file)
-        data = voice_sound_data.getmel(file)
+        data = voice_sound.getmel(file)
         
-        sound_predictions = voice_sound_prediction.getPridict(data,SOUND_MODEL_PATH)
-        is_sound_danger = voice_sound_prediction.is_danger_sound(sound_predictions)
+        sound_predictions = voice_sound.getPridict(data,SOUND_MODEL_PATH)
+        is_sound_danger = voice_sound.is_danger_sound(sound_predictions)
         print("===>尖叫聲音："+str(is_sound_danger))    
     
+#voice
+#偵測 儲存聲音        
+def detectesound():
+    recorder = voice_sound.Recorder(SOUND_PATH_TMP)
+    print("================================S=T=A=R=T=================================")
+    silence_start_time = recorder.getcurrenttime()
+    print("------------------recording silence sound------------------")
+    rec_silence = []
+    
+    while(speech_text != "離開"):
+        data = recorder.getsound()
+        if recorder.ifnoise(data):
+            if rec_silence != '':
+                silencefile = recorder.write(b''.join(rec_silence),silence_start_time)
+            print("------------------stop recording silence sound------------------")
+            rec_silence = []
+            print("\n------------------recording noise sound------------------")
+            rec_noise = []
+            rec_noise.append(data)
+        
+            noise_start_time = recorder.getcurrenttime()
+            
+            currentime = time.time()
+            endtime = time.time() + 2
+            addtime = endtime
+            while (currentime <= endtime) or (currentime <= addtime):
+                data = recorder.getsound()
+                if (addtime-0.5 < currentime) and (currentime <= addtime):
+                    if recorder.ifnoise(data):
+                        print('test')
+                        #addtime = addtime + 0.5
+                rec_noise.append(data)
+                
+                currentime = time.time()
+                    
+                
+                if(is_danger_record):
+                    noisefile = recorder.write(b''.join(rec_noise),noise_start_time)
+                    recorder.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+                    return
+                
+                
+            noisefile = recorder.write(b''.join(rec_noise),noise_start_time)
+            print("------------------stop recording noise sound------------------")
+            
+            voicespeech(noisefile)
+            voicesound(noisefile)
+            
+            print("\n------------------recording silence sound------------------")
+            """
+            t1 = threading.Thread(target = voicespeech(noisefile))
+            t2 = threading.Thread(target = voicesound(noisefile))
+            
+            t1.start()
+            t2.start()
+            """
 
+            silence_start_time = recorder.getcurrenttime()
+            
+        else:
+            rec_silence.append(data)
+            
+            if(is_danger_record):
+                silencefile = recorder.write(b''.join(rec_silence),silence_start_time)
+                recorder.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+                return
+            
+    recorder.merge_files(SOUND_PATH_TMP, SOUND_PATH)
+    
 #--------------------------------
 #main
 if __name__ == "__main__":
-    
+    detectesound()
+    """
     while True:
         print("\n\033[33m==================")
         print("|是否危險： "+str(is_danger_record)+"|")
@@ -429,7 +498,7 @@ if __name__ == "__main__":
         
         else:
             recording_danger()
-        
+    """
     
 
     

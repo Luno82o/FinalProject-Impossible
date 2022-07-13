@@ -1,6 +1,7 @@
 import speech_recognition as sr
-#from pydub import AudioSegment
 
+
+#--------------------------------------
 # Capture Voice
 # takes command through microphone
 def recordStatement():
@@ -20,15 +21,12 @@ def recognizeCommand(audio):
 		print("say that again please.....")
 		return "None"
 	return query
-""""""
-def takecommand():
-    audio = recordStatement()
-    query = recognizeCommand(audio)
-    print(f"{query}\n")
-    return query
 
-def recordStatementwav(filename):
-    r = sr.Recognizer()
-    with sr.WavFile(filename) as source:
-        audio = r.record(source)
-    return audio
+#--------------------------------------
+#speech recognition
+def recognition(filepath):
+    
+    audio = recordStatementwav(filepath)
+    query = recognizeCommand(audio)
+        
+    return audio,query
