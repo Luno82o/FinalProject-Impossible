@@ -402,17 +402,15 @@ def voicespeech(filename):
     print("===>語音辨識："+speech_text)
     
 #voice(聲音辨識)
-def voicesound(filename):
-    global is_sound_danger
-    
+def voicesound(filename):    
     filelist = voice_sound.cutwav(filename)
     for file in filelist:
         print(file)
         data = voice_sound.getmel(file)
         
         sound_predictions = voice_sound.getPridict(data,SOUND_MODEL_PATH)
-        is_sound_danger = voice_sound.is_danger_sound(sound_predictions)
-        print("===>尖叫聲音："+str(is_sound_danger))    
+        is_danger_record = voice_sound.is_danger_sound(sound_predictions)
+        print("===>危險聲音："+str(is_danger_record))    
     
 #voice
 #偵測 儲存聲音        
@@ -423,7 +421,7 @@ def detectesound():
     print("------------------recording silence sound------------------")
     rec_silence = []
     
-    while(speech_text != "離開"):
+    while(True):
         data = recorder.getsound()
         if recorder.ifnoise(data):
             if rec_silence != '':
@@ -484,10 +482,7 @@ def detectesound():
     recorder.merge_files(SOUND_PATH_TMP, SOUND_PATH)
     
 #--------------------------------
-#main
-if __name__ == "__main__":
-    detectesound()
-    """
+def posetmp():
     while True:
         print("\n\033[33m==================")
         print("|是否危險： "+str(is_danger_record)+"|")
@@ -498,7 +493,10 @@ if __name__ == "__main__":
         
         else:
             recording_danger()
-    """
+#--------------------------------
+#main
+if __name__ == "__main__":
+    detectesound()
     
 
     
