@@ -402,7 +402,8 @@ def voicespeech(filename):
     print("===>語音辨識："+speech_text)
     
 #voice(聲音辨識)
-def voicesound(filename):    
+def voicesound(filename):
+    global is_danger_record
     filelist = voice_sound.cutwav(filename)
     for file in filelist:
         print(file)
