@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+<!--title-->
+{% block title %}
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title>owl monitor</title>
+    {% endif %}
+{% endblock %}
+
+<!--nav-->
+{% block navbar %}
+  {% include 'navbar.html' %}
+{% endblock %}
+
+<!--body-->
+{% block content %}
+    <div class="container">
+        {% block app_content %}
+        {% endblock %}
+    </div>
+{% endblock %}
