@@ -14,3 +14,4 @@ slidingwindow
 pyyaml
 matplotlib
 pydub
+keyboard
