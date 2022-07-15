@@ -13,3 +13,4 @@ sklearn
 slidingwindow
 pyyaml
 matplotlib
+pydub
